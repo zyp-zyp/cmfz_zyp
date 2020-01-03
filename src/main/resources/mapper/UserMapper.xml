@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 接口的全限定名 -->
+<mapper namespace="com.baizhi.dao.UserDao">
+    <sql id="USER_SQL">
+        id, phone_number, password, name, dharma, head_img, sex, address, sign, guru_id, last_date, create_date, status, salt, other from user
+    </sql>
+
+    <!--添加-->
+    <insert id="insert">
+        insert into t_user values (#{id},#{phone_number},#{password},#{name},#{dharma},#{head_img},#{sex},#{address},#{sign},#{guru_id},#{last_date},#{create_date},#{status},#{salt},#{other})
+    </insert>
+
+    <!--手机号查询-->
+    <select id="selectByPhone" resultType="User">
+        select
+        <include refid="USER_SQL"/>
+        where phone_number = #{phone_number}
+    </select>
+
+    <!--地址分布-->
+    <select id="selectAddress" resultType="AddressDto">
+        SELECT address,count(*) as count from t_user group by address
+    </select>
+
+
+
+</mapper>

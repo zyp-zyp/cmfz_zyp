@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 接口的全限定名 -->
+<mapper namespace="com.baizhi.dao.BannerDao">
+    <!--分页查询-->
+    <select id="selectByPage" resultType="Banner">
+        select * from banner limit #{start},#{rows}
+    </select>
+    <!--查询总条数-->
+    <select id="selectCunt" resultType="int">
+        select count(id) from banner
+    </select>
+    <select id="select" resultType="Banner">
+        select * from banner
+    </select>
+
+    <!--添加-->
+    <insert id="insert">
+        insert into banner values (#{id},#{title},#{img},#{create_date},#{status},#{other})
+    </insert>
+    <!--修改-->
+    <update id="update" parameterType="Banner">
+        update banner
+        <trim prefix="set" suffixOverrides=",">
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="create_date != null">
+                create_date = #{create_date},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="other != null">
+                other = #{other}
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <!-- 批量删除 -->
+    <delete id="delete">
+        delete from banner where  id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--最近七天的上传数-->
+    <select id="selectDay7" resultType="int">
+      select ifnull(b.count,0) as count
+      from (
+      SELECT curdate() as create_date
+          union all
+          SELECT date_sub(curdate(), interval 1 day) as create_date
+          union all
+          SELECT date_sub(curdate(), interval 2 day) as create_date
+          union all
+          SELECT date_sub(curdate(), interval 3 day) as create_date
+          union all
+          SELECT date_sub(curdate(), interval 4 day) as create_date
+          union all
+          SELECT date_sub(curdate(), interval 5 day) as create_date
+          union all
+          SELECT date_sub(curdate(), interval 6 day) as create_date
+          ) a left join (
+      select date(create_date) as create_date, count(*) as count
+          from banner
+          group by date(create_date)
+      ) b on a.create_date = b.create_date;
+    </select>
+
+
+
+
+
+    <select id="selectMonth12" resultType="Month12Dto">
+      select
+        sum(case month(create_date) when '1' then 1 else 0 end) as month1,
+        sum(case month(create_date) when '2' then 1 else 0 end) as month2,
+        sum(case month(create_date) when '3' then 1 else 0 end) as month3,
+        sum(case month(create_date) when '4' then 1 else 0 end) as month4,
+        sum(case month(create_date) when '5' then 1 else 0 end) as month5,
+        sum(case month(create_date) when '6' then 1 else 0 end) as month6,
+        sum(case month(create_date) when '7' then 1 else 0 end) as month7,
+        sum(case month(create_date) when '8' then 1 else 0 end) as month8,
+        sum(case month(create_date) when '9' then 1 else 0 end) as month9,
+        sum(case month(create_date) when '10' then 1 else 0 end) as month10,
+        sum(case month(create_date) when '11' then 1 else 0 end) as month11,
+        sum(case month(create_date) when '12' then 1 else 0 end) as month12
+      from banner
+      where year(create_date)='2019' ;
+
+    </select>
+
+
+
+</mapper>

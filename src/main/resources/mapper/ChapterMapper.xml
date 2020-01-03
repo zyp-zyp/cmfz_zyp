@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 接口的全限定名 -->
+<mapper namespace="com.baizhi.dao.ChapterDao">
+
+    <!--专辑id查-->
+    <select id="selectByalbumId" resultType="Chapter">
+        select * from chapter where album_Id = #{album_Id}
+    </select>
+    <!--分页查询-->
+    <select id="selectByPage" resultType="Chapter">
+        select * from chapter where album_Id = #{album_Id} limit #{start},#{rows}
+    </select>
+    <!--查询总条数-->
+    <select id="selectCunt" resultType="int">
+        select count(id) from chapter
+    </select>
+
+    <!--添加-->
+    <insert id="insert">
+        insert into chapter values (#{id},#{title},#{album_Id},#{size},#{duration},#{src},#{status},#{other},#{create_date})
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        update chapter
+        <trim prefix="set" suffixOverrides=",">
+            <if test="title != null">
+                title = #{title} ,
+            </if>
+            <if test="album_Id != null">
+                album_Id = #{album_Id} ,
+            </if>
+            <if test="size != null">
+                size = #{size} ,
+            </if>
+            <if test="duration != null">
+                duration = #{duration} ,
+            </if>
+            <if test="src != null">
+                src = #{src} ,
+            </if>
+            <if test="status != null">
+                status = #{status} ,
+            </if>
+            <if test="other != null"> ,
+                other = #{other} ,
+            </if>
+            <if test="create_date != null">
+                create_date = #{create_date}
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="selectById" resultType="Chapter">
+        select * from chapter where id = #{id}
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="delete">
+        delete from chapter where  id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

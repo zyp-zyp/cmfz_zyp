@@ -1,0 +1,31 @@
+server:
+  port:  9001
+  servlet:
+    context-path:  /cmfz_zyp
+spring:
+  datasource:
+    username:  root
+    password:  root
+    type:  com.alibaba.druid.pool.DruidDataSource
+    url:  jdbc:mysql://127.0.0.1:3306/cmfz?characterEncoding=utf-8
+    driver-class-name:  com.mysql.jdbc.Driver
+  mvc:
+    view:
+      prefix:  /
+      suffix:  jsp
+
+  #上传
+  servlet:
+    multipart:
+      max-file-size:  1GB
+      max-request-size: 5GB
+
+mybatis:
+  mapper-locations:  classpath:mapper/*Mapper.xml
+  type-aliases-package:  com.baizhi.entity
+logging:
+  level:
+    root: info
+    com.bestvike: debug
+    org.springframework.security: warn
+
